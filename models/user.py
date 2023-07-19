@@ -1,11 +1,11 @@
 from init import db, ma
 
-class User(db.model):
+class User(db.Model):
     __tablename__ = 'users' # creating users tablename
 
     id = db.Column(db.Integer, primary_key=True) # primary key
     name = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nulllable=False, unique=True) # has to be unique
+    email = db.Column(db.String, nullable=False, unique=True) # has to be unique
     password = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=True) # optional so nullable True
     is_admin = db.Column(db.Boolean, default=False) # default not admin
