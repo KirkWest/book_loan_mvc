@@ -30,7 +30,7 @@ def auth_register():
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
             return {'error': f'The {err.orig.diag.column_name} must be entered'}, 409 # the f string allows us to dynamically change the error message depending on the column name
 
-@auth_bp.route('/login', methods=['POST']) # login route for users
+@auth_bp.route('/login', methods=['POST']) # login route for users with checks for existing user and correct password
 def auth_login():
     body_data = request.get_json() # checks db for user
     stmt = db.select(User).filter_by(email=body_data.get('email'))
