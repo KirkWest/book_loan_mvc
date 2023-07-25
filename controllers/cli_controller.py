@@ -14,7 +14,7 @@ def drop_all():
     db.drop_all()
     print("Tables dropped")
 
-@db_commands.cli.command('seed')
+@db_commands.cli.command('seed') # seeds table with User information
 def seed_db():
     users = [
         User(
