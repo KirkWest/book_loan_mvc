@@ -3,6 +3,7 @@ import os
 from init import db, ma, bcrypt, jwt # imports instances
 from controllers.cli_controller import db_commands # imports blueprint from client controller
 from controllers.auth_controller import auth_bp
+from controllers.books_controller import books_bp
 
 # define app
 def create_app():
@@ -20,6 +21,8 @@ def create_app():
 
     app.register_blueprint(db_commands) # registers blueprint to app
     app.register_blueprint(auth_bp) # registers our authorisation blueprint
+    app.register_blueprint(books_bp) # registers our books blueprint
 
     # return that app from the create_app function
     return app
+

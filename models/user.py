@@ -1,6 +1,6 @@
 from init import db, ma
 
-class User(db.Model):
+class User(db.Model): # User table class
     __tablename__ = 'users' # creating users tablename
 
     id = db.Column(db.Integer, primary_key=True) # primary key
