@@ -18,10 +18,11 @@ def drop_all():
     db.drop_all()
     print("Tables dropped")
 
-@db_commands.cli.command('seed') # seeds table with User information
+@db_commands.cli.command('seed') # seeds table with User books genre information
 def seed_db():
     users = [
         User(
+            name='Kirk West',
             email='kirkwestsooby@gmail.com',
             password=bcrypt.generate_password_hash('admin123').decode('utf-8'),
             address='10 Branch st Shortland 2307',
@@ -75,21 +76,21 @@ def seed_db():
     ]
     db.session.add_all(books)
 
-    loans = [
-        Loans(
-            user_id=1,
-            book_id=1,
-            loan_date=date.today(),
-            returned=False
-        ),
-        Loans(
-            user_id=2,
-            book_id=2,
-            loan_date=date.today(),
-            returned=False
-        )
-    ]
-    db.session.add_all(loans)
+    # loans = [
+    #     Loans(
+    #         user_id=1,
+    #         book_id=1,
+    #         loan_date=date.today(),
+    #         returned=False
+    #     ),
+    #     Loans(
+    #         user_id=2,
+    #         book_id=2,
+    #         loan_date=date.today(),
+    #         returned=False
+    #     )
+    # ]
+    # db.session.add_all(loans)
 
     db.session.commit() # commits to db
 
