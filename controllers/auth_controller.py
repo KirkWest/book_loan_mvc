@@ -13,6 +13,11 @@ def auth_register():
     try:
         body_data = request.get_json()
 
+        # validate password length
+        password = body_data.get('password')
+        if not password or len(password) < 8:
+            return {'error': 'Password must have 8 or more characters'}, 400
+
         user = User() # user model instance for our user class
         user.name = body_data.get('name')
         user.email = body_data.get('email')
@@ -35,7 +40,7 @@ def auth_login():
     body_data = request.get_json() # checks db for user
     stmt = db.select(User).filter_by(email=body_data.get('email'))
     user = db.session.scalar(stmt)
-    if user and bcrypt.check_password_hash(user.passwrod, body_data.get('password')): # checking if password is valid
+    if user and bcrypt.check_password_hash(user.password, body_data.get('password')): # checking if password is valid
         token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
         return{'email': user.email, 'token': token, 'is_admin': user.is_admin}
     else:
