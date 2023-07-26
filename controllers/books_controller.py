@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db
 from models.books import Books, BooksSchema
+from models.genres import Genres, GenresSchema
 from models.user import User
 
 books_bp = Blueprint('books', __name__, url_prefix='/books')
@@ -27,10 +28,19 @@ def add_book():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user.is_admin:
-        return {'error': 'Only admins can add a book'}, 403
+        return {'error': 'Only admin can add a book'}, 403
 
     data = request.get_json()
-    new_book = Books(title=data['title'], author=data['author'], genre_id=data['genre_id'])
+    genre_name = data.get('genre_name')
+
+    # checks if genre with that name exists
+    genre = Genres.query.filter_by(genre_name=genre_name).first()
+
+    if not genre:
+        genre = Genres(genre_name=genre_name)
+        db.session.add(genre)
+
+    new_book = Books(title=data['title'], author=data['author'], genre=genre)
     db.session.add(new_book)
     db.session.commit()
     return books_schema.jsonify(new_book), 201
@@ -42,6 +52,13 @@ def update_book(id):
         return {'error': f'Book not found with id {id}'}, 404
 
     data = request.get_json()
+    genre_name = data.get('genre_name')
+
+    genre = Genres.query.filter_by(genre_name=genre_name).first()
+
+    if not genre:
+        genre = Genres(genre_name=genre_name)
+        db.session.add(genre)
 
     if 'title' in data:
         book.title = data['title']
@@ -49,9 +66,7 @@ def update_book(id):
     if 'author' in data:
         book.author = data['author']
 
-    if 'genre_id' in data:
-        book.genre_id = data['genre_id']
-
+    book.genre = genre
     db.session.commit()
     return books_schema.jsonify(book)
 

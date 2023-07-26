@@ -1,6 +1,10 @@
 from flask import Blueprint
 from init import db, bcrypt
 from models.user import User # create user
+from models.books import Books
+from models.loans import Loans
+from models.genres import Genres
+from datetime import date
 
 db_commands = Blueprint('db', __name__) # wrapped our cli controller in blueprint
 
@@ -34,6 +38,59 @@ def seed_db():
             password=bcrypt.generate_password_hash('user2SWS').decode('utf-8')
         )
     ]
-
     db.session.add_all(users) # adds users
+
+    genres = [
+        Genres(
+            genre_name='Fantasy',
+            description='Typically features the use of magic or other supernatural phenomena in the plot, setting, or theme'
+        ),
+        Genres(
+            genre_name='Autobigraphical',
+            description='Biography of oneself narrated by oneself'
+        ),
+        Genres(
+            genre_name='Thrillers',
+            description='Action-packed, page-turners with moments full of tension, anxiety, and fear'
+        )
+    ]
+    db.session.add_all(genres)
+
+    books = [
+        Books(
+            title='Book 1',
+            author='Author 1',
+            genre_id=1
+        ),
+        Books(
+            title='Book 2',
+            author='Author 2',
+            genre_id=2
+        ),
+        Books(
+            title='Book 3',
+            author='Author 3',
+            genre_id=3
+        )
+    ]
+    db.session.add_all(books)
+
+    loans = [
+        Loans(
+            user_id=1,
+            book_id=1,
+            loan_date=date.today(),
+            returned=False
+        ),
+        Loans(
+            user_id=2,
+            book_id=2,
+            loan_date=date.today(),
+            returned=False
+        )
+    ]
+    db.session.add_all(loans)
+
     db.session.commit() # commits to db
+
+    print("tables seeded")

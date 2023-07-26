@@ -7,6 +7,9 @@ class Genres(db.Model):
     genre_name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=True)
 
+    # added relationshop to access books with genre
+    books = db.relationship('Books', back_populates='genre')
+
 class GenresSchema(ma.Schema):
     class Meta:
         fields = ('id', 'genre_name', 'description')
