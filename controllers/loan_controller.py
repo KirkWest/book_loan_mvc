@@ -24,6 +24,16 @@ def get_one_loan(id):
 @loan_bp.route('/', methods=['POST'])
 def create_loan():
     data = request.get_json()
+
+    # added validation check that will alert the user of what fields are missing
+    required_fields = ['user_id', 'book_id', 'loan_date']
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        missing_fields_str = ', '.join(missing_fields)
+        return {'error': f'You are missing these fields: {missing_fields_str}'}, 400
+    
+    # creates new loan
     new_loan = Loans(
         user_id=data['user_id'],
         book_id=data['book_id'],
