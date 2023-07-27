@@ -37,13 +37,13 @@ def auth_register():
 
 @auth_bp.route('/login', methods=['POST']) # login route for users with checks for existing user and correct password
 def auth_login():
-    body_data = request.get_json() # gets JSOn data from body
+    body_data = request.get_json() # gets JSON data from body
     stmt = db.select(User).filter_by(email=body_data.get('email'))
     user = db.session.scalar(stmt)
 
     # if user exists it checks the password matches what is stored and returns the users email, token, and admin status
     if user and bcrypt.check_password_hash(user.password, body_data.get('password')):
-        token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
+        token = create_access_token(identity=str(user.id), expires_delta=timedelta(hours=4)) # token expires in 4 hours
         return{'email': user.email, 'token': token, 'is_admin': user.is_admin}
     else:
         # error message if user doesn't exist

@@ -55,7 +55,7 @@ def seed_db():
             description='Action-packed, page-turners with moments full of tension, anxiety, and fear'
         )
     ]
-    db.session.add_all(genres)
+    db.session.add_all(genres) # adds genres
 
     books = [
         Books(
@@ -74,23 +74,23 @@ def seed_db():
             genre_id=3
         )
     ]
-    db.session.add_all(books)
+    db.session.add_all(books) # adds books
 
-    # loans = [
-    #     Loans(
-    #         user_id=1,
-    #         book_id=1,
-    #         loan_date=date.today(),
-    #         returned=False
-    #     ),
-    #     Loans(
-    #         user_id=2,
-    #         book_id=2,
-    #         loan_date=date.today(),
-    #         returned=False
-    #     )
-    # ]
-    # db.session.add_all(loans)
+    loans = [
+        Loans(
+            user_id=1,
+            book_id=1,
+            loan_date=date.today(),
+            returned=False
+        ),
+        Loans(
+            user_id=2,
+            book_id=2,
+            loan_date=date.today(),
+            returned=False
+        )
+    ]
+    db.session.add_all(loans) # adds loans, note: the first 3 tables must be seeded then commented out to then seed loans for testing
 
     db.session.commit() # commits to db
 

@@ -9,6 +9,7 @@ class User(db.Model): # User table class
     password = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=True) # optional so nullable True
     is_admin = db.Column(db.Boolean, default=False) # default not admin
+    loans = db.relationship('Loans', back_populates='user')
 
 class UserSchema(ma.Schema): # subclass of ma.Schema so it can be JSON serilisable
     class Meta: # Meta class containing the fields of the table
