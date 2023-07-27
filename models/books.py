@@ -11,6 +11,7 @@ class Books(db.Model):
 
     # added relationship to access genre name
     genre = db.relationship('Genres', back_populates='books')
+    loans = db.relationship('Loans', back_populates='book')
 
 class BooksSchema(ma.Schema):
     class Meta:

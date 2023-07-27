@@ -7,11 +7,12 @@ class Loans(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    user = db.relationship('Users', back_populates='loans')
     book_id = db.Column(db.Integer, db.ForeignKey('books.id'), nullable=False)
-    book = db.relationship('Books', back_populates='loans')
     loan_date = db.Column(db.Date, default=datetime.now, nullable=False)
     returned = db.Column(db.Boolean, default=False)
+
+    user = db.relationship('User', back_populates='loans')
+    book = db.relationship('Books', back_populates='loans')
 
 class LoansSchema(ma.Schema):
     class Meta:
