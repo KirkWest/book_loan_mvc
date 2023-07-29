@@ -31,14 +31,21 @@ def add_book():
         return {'error': 'Only admin can add a book'}, 403
 
     data = request.get_json()
+    title = data.get('title')
+    author = data.get('author')
     genre_name = data.get('genre_name')
+
+    # error code for missing fields
+    if not title or not author or not genre_name:
+        return {'error': 'title, author, and genre are required'}, 400
 
     # checks if genre with that name exists
     genre = Genres.query.filter_by(genre_name=genre_name).first()
 
-    if not genre:
+    if not genre: # if genre doesn't aleady exist it will create the new genre
         genre = Genres(genre_name=genre_name)
         db.session.add(genre)
+        db.session.commit()
 
     new_book = Books(title=data['title'], author=data['author'], genre=genre)
     db.session.add(new_book)
