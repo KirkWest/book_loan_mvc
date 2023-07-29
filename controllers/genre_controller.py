@@ -1,4 +1,6 @@
 from flask import Blueprint, request
+from sqlalchemy.exc import IntegrityError
+from psycopg2 import errorcodes
 from init import db
 from models.genres import Genres, GenresSchema
 
@@ -14,12 +16,20 @@ def get_all_genres():
 @genre_bp.route('/', methods=['POST'])
 def create_genre():
     data = request.get_json()
+    genre_name = data.get('genre_name')
+
+    if not genre_name or not genre_name.strip():
+        return {'error': 'Genre name is required and cannot be empty'}, 400
+    
     new_genre = Genres(
         genre_name=data['genre_name'],
         description=data.get('description')
     )
-    db.session.add(new_genre)
-    db.session.commit()
-    return genre_schema.jsonify(new_genre), 201
-
-# need to add extra routes for updating and deleting
+    try:
+        db.session.add(new_genre)
+        db.session.commit()
+        return genre_schema.jsonify(new_genre), 201
+    except IntegrityError as err:
+        if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
+            return {'error': 'Genre name already exists'}, 409
+        return {'error': 'An error occurred while attempting to create the genre'}, 500 # catch all error for anything unforseen comes up

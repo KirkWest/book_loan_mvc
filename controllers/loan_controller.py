@@ -1,43 +1,49 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from init import db
 from models.loans import Loans, LoansSchema
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from datetime import datetime
 
 loan_bp = Blueprint('loan', __name__, url_prefix='/loans')
 loan_schema = LoansSchema()
 loans_schema = LoansSchema(many=True)
 
+# get all loans and dumps them in JSON format
 @loan_bp.route('/', methods=['GET'])
 def get_all_loans():
     loans = Loans.query.all()
-    return loans_schema.dump(loans)
+    return jsonify(loans_schema.dump(loans))
 
-              # dynamic route id capture
+# gets one loan and dumps in JSON format
 @loan_bp.route('/<int:id>', methods=['GET'])
 def get_one_loan(id):
     loan = Loans.query.get(id)
     if loan:
-        return loan_schema.dump(loan)
+        return loan_schema.jsonify(loan)
     else:
         return {'error': 'Loan does not exist'}, 404
-    
+
+# creates new loan
 @loan_bp.route('/', methods=['POST'])
 def create_loan():
     data = request.get_json()
 
     # added validation check that will alert the user of what fields are missing
-    required_fields = ['user_id', 'book_id', 'loan_date']
+    required_fields = ['user_id', 'book_id']
     missing_fields = [field for field in required_fields if field not in data]
 
     if missing_fields:
         missing_fields_str = ', '.join(missing_fields)
         return {'error': f'You are missing these fields: {missing_fields_str}'}, 400
     
+    #creates loan date automatically using datetime
+    loan_date = datetime.now()
+    
     # creates new loan
     new_loan = Loans(
         user_id=data['user_id'],
         book_id=data['book_id'],
-        loan_date=data['loan_date'],
+        loan_date=loan_date,
         returned=False
     )
 
