@@ -1,7 +1,7 @@
 from init import db, ma
 from datetime import datetime
 
-
+# Creates Loans model for loans in db
 class Loans(db.Model):
     __tablename__ = 'loans'
 
@@ -11,9 +11,10 @@ class Loans(db.Model):
     loan_date = db.Column(db.Date, default=datetime.now, nullable=False)
     returned = db.Column(db.Boolean, default=False)
 
+    # relationships between User-loans and Books-loans
     user = db.relationship('User', back_populates='loans')
     book = db.relationship('Books', back_populates='loans')
 
 class LoansSchema(ma.Schema):
-    class Meta:
+    class Meta: # serilised output for loans fields
         fields = ('id', 'user_id', 'book_id', 'loan_date', 'returned')

@@ -1,6 +1,6 @@
 from init import db, ma
 
-# using a similar format to user.py
+# Creates a book model for books table in db
 class Books(db.Model): 
     __tablename__ = 'books'
 
@@ -9,10 +9,10 @@ class Books(db.Model):
     author = db.Column(db.String, nullable=False)
     genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'), nullable=False)
 
-    # added relationship to access genre name
+    # defines relationships for genres-books and loans-book
     genre = db.relationship('Genres', back_populates='books')
     loans = db.relationship('Loans', back_populates='book')
 
 class BooksSchema(ma.Schema):
-    class Meta:
+    class Meta: # specifies fields for serilised output
         fields = ('id', 'title', 'author', 'author', 'genre_id')
