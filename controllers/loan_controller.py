@@ -53,7 +53,7 @@ def create_loan():
     return loan_schema.jsonify(new_loan), 201
 
     
-@loan_bp.route('/<int:id>', methods=['PATCH'])
+@loan_bp.route('/<int:id>', methods=['PATCH']) # lets us update a loan using JWT by setting the boolean to True or False depending on loan status
 @jwt_required()
 def update_loan(id):
     body_data = request.get_json()
@@ -71,7 +71,7 @@ def update_loan(id):
     else:
         return {'error': f'Loan not found with id {id}'}, 404
     
-@loan_bp.route('/<int:id>', methods=['DELETE'])
+@loan_bp.route('/<int:id>', methods=['DELETE']) # Lets us delete a loan if we wish to clean up the system from old loans, JWT required
 @jwt_required()
 def delete_loan(id):
     loan = Loans.query.get(id)

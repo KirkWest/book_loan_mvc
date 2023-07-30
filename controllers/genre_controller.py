@@ -8,12 +8,12 @@ genre_bp = Blueprint('genre', __name__, url_prefix='/genres')
 genre_schema = GenresSchema()
 genres_schema = GenresSchema(many=True)
 
-@genre_bp.route('/', methods=['GET'])
+@genre_bp.route('/', methods=['GET']) # retrieves all genres and dumps them in JSON form
 def get_all_genres():
     genres = Genres.query.all()
     return genres_schema.dump(genres)
 
-@genre_bp.route('/', methods=['POST'])
+@genre_bp.route('/', methods=['POST']) # creates new genres
 def create_genre():
     data = request.get_json()
     genre_name = data.get('genre_name')

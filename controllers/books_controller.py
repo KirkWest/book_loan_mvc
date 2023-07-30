@@ -22,7 +22,7 @@ def get_one_book(id):
     else:
         return {'error': f'Book not found with id {id}'}, 404
     
-@books_bp.route('/', methods=['POST'])
+@books_bp.route('/', methods=['POST']) # Adds new book to database
 @jwt_required()
 def add_book():
     user_id = get_jwt_identity()
@@ -52,7 +52,7 @@ def add_book():
     db.session.commit()
     return books_schema.jsonify(new_book), 201
 
-@books_bp.route('/<int:id>', methods=['PUT', 'PATCH'])
+@books_bp.route('/<int:id>', methods=['PUT', 'PATCH']) # updates any information for a chosen book using the books ID
 def update_book(id):
     book = Books.query.get(id)
     if not book:
@@ -77,7 +77,7 @@ def update_book(id):
     db.session.commit()
     return books_schema.jsonify(book)
 
-@books_bp.route('/<int:id>', methods=['DELETE'])
+@books_bp.route('/<int:id>', methods=['DELETE']) # deltes a book if needed
 def delete_one_book(id):
     book = Books.query.get(id)
     if book:
