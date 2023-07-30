@@ -10,7 +10,10 @@ from controllers.genre_controller import genre_bp
 # define app
 def create_app():
     app = Flask(__name__) # create flask app
-    
+
+    # ensures that json reponses do not sort keys alphabetically
+    app.json.sort_keys = False
+
     # data bases URI and JWT secret key      dbms       driver     user      pwd     uri    port  db_name
     app.config["SQLALCHEMY_DATABASE_URI"]=os.environ.get("DATABASE_URL")
     app.config["JWT_SECRET_KEY"]=os.environ.get("JWT_SECRET_KEY")
@@ -29,4 +32,3 @@ def create_app():
 
     # return that app from the create_app function
     return app
-
